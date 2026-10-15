@@ -3,28 +3,16 @@
 #axle distance = 150mm
 
 import motion
+import config
 
 
 
 
-class line_follow_algorithms_fourline():
-    far_right = 
-    middle_right = 
-    middle_left =
-    far_left =
+def line_follow_algorithms_fourline(far_left_sensor, middle_left_sensor, middle_right_sensor, far_right_sensor):
 
-    left_turn_signal = far_left and middle_left and not(far_right or middle_right)
-    right_turn_signal = far_right and middle_right and not(far_left or middle_left)
-    t_juncion_signal = far_left and middle_left and far_right and middle_right
+    left_turn_signal = far_left_sensor and middle_left_sensor and not(far_right_sensor or middle_right_sensor)
+    right_turn_signal = far_right_sensor and middle_right_sensor and not(far_left_sensor or middle_left_sensor)
+    t_junction_signal = far_left_sensor and middle_left_sensor and far_right_sensor and middle_right_sensor
 
-    def left_turn():
-        motion.turn_left_90(left_motor, right_motor, turn_time=0.5, speed=30,
-                 left_inverted=False, right_inverted=False)
-
-    def right_turn():
-        motion.turn_right_90(left_motor, right_motor, turn_time=0.5, speed=30,
-                 left_inverted=False, right_inverted=False)
-
-    def left_tap():
 
 

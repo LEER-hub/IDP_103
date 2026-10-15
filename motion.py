@@ -1,5 +1,5 @@
 from utime import sleep
-
+import config
 
 def turn_left_90(left_motor, right_motor, turn_time, speed=30,
                  left_inverted=False, right_inverted=False):
@@ -53,3 +53,15 @@ def turn_right_90(left_motor, right_motor, turn_time, speed=30,
     turn_left_90(right_motor, left_motor, turn_time, speed,
                  left_inverted=right_inverted,
                  right_inverted=left_inverted)
+
+
+def left_tap(left_motor, right_motor, turn_time, speed,
+             left_inverted=False, right_inverted=False):
+    left_motor.Forward(5)
+    right_motor.Forward(10)
+
+
+def right_tap(left_motor, right_motor, turn_time, speed,
+              left_inverted=False, right_inverted=False):
+    left_motor.Forward(10)
+    right_motor.Forward(5)
