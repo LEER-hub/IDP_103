@@ -1,67 +1,51 @@
 from utime import sleep
 import config
 
-def turn_left_90(left_motor, right_motor, turn_time, speed=30,
+def turn_left_90(turn_time=2,
                  left_inverted=False, right_inverted=False):
-    """Pivot left using a duration calibrated for 90 degrees.
-
-    Pass Motor objects in physical left/right order. turn_time is in seconds
-    and must be measured on the robot at the selected speed (PWM percent).
-    Set a motor's inverted flag if its Forward() makes that wheel go backward.
-    This is a timed turn, not a measured angle; battery, load and surface
-    changes can affect the result. Importing this module does not move motors.
-    """
-    if not 0 < turn_time < float("inf"):
-        raise ValueError("turn_time must be a finite positive number of seconds")
-    if not 0 < speed <= 100:
-        raise ValueError("speed must be greater than 0 and at most 100")
-
-    try:
-        left_motor.off()
-        right_motor.off()
-        sleep(0.1)  # Brief pause before changing wheel directions.
-
-        # A left pivot needs the left wheel backward and right wheel forward.
-        if left_inverted:
-            left_motor.Forward(speed)
-        else:
-            left_motor.Reverse(speed)
-
-        if right_inverted:
-            right_motor.Reverse(speed)
-        else:
-            right_motor.Forward(speed)
-
-        sleep(turn_time)
-    finally:
-        # Also stop if the turn is interrupted or a motor command fails.
-        try:
-            left_motor.off()
-        finally:
-            right_motor.off()
+    config.left_motor.Reverse(50)
+    config.right_motor.Forward(50)
+    sleep(turn_time)
+    config.right_motor.off()
+    config.left_motor.off()
 
 
-def turn_right_90(left_motor, right_motor, turn_time, speed=30,
+def turn_right_90(turn_time=2,
                   left_inverted=False, right_inverted=False):
-    """Pivot right using a duration calibrated for 90 degrees.
+    config.left_motor.Forward(50)
+    config.right_motor.Reverse(50)
+    sleep(turn_time)
+    config.right_motor.off()
+    config.left_motor.off()
 
-    Arguments use the same physical left/right order as turn_left_90.
-    Calibrate turn_time for right turns; it may differ from the left-turn time.
-    """
-    # Swap wheels and their flags to reuse validation and guaranteed cleanup:
-    # the physical left wheel goes forward and the right wheel backward.
-    turn_left_90(right_motor, left_motor, turn_time, speed,
-                 left_inverted=right_inverted,
-                 right_inverted=left_inverted)
-
-
-def left_tap(left_motor, right_motor, turn_time, speed,
+def left_tap(turn_time = 0.5,
              left_inverted=False, right_inverted=False):
-    left_motor.Forward(5)
-    right_motor.Forward(10)
+    config.left_motor.Forward(40)
+    config.right_motor.Forward(50)
+    sleep(turn_time)
 
 
-def right_tap(left_motor, right_motor, turn_time, speed,
+def right_tap(turn_time = 0.5,
               left_inverted=False, right_inverted=False):
-    left_motor.Forward(10)
-    right_motor.Forward(5)
+    config.left_motor.Forward(50)
+    config.right_motor.Forward(40)
+    sleep(turn_time)
+    config.right_motor.off()
+    config.left_motor.off()
+
+
+def forward(speed=50):
+    config.left_motor.Forward(speed)
+    config.right_motor.Forward(speed)
+
+def reverse(speed=50):
+    config.left_motor.Reverse(speed)
+    config.right_motor.Reverse(speed)
+
+
+def stop():
+    """Stop both motors."""
+    try:
+        config.left_motor.off()
+    finally:
+        config.right_motor.off()
