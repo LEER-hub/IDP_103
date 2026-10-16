@@ -1,3 +1,4 @@
+import config
 from motors import Motor
 from utime import sleep
 
@@ -21,6 +22,3 @@ def test_motor3_and4():
         motorleft.off()
         motorright.off()
 
-
-if __name__ == "__main__":
-    test_motor3_and4()

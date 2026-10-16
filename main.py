@@ -32,3 +32,5 @@ finally:
 
 '''
 motion.turn_left_90(turn_time = 1.5)
+sleep(1)
+motion.turn_right_90(turn_time = 1.5)
