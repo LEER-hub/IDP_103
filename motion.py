@@ -38,7 +38,7 @@ def forward(speed=50):
     config.left_motor.Forward(speed)
     config.right_motor.Forward(speed)
 
-def reverse(speed=50):
+def reverse(speed=30):
     config.left_motor.Reverse(speed)
     config.right_motor.Reverse(speed)
 
