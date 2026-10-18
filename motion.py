@@ -28,6 +28,8 @@ def turn_180(turn_time=3.08, left_inverted=False, right_inverted=False):
     config.left_motor.Reverse(50)
     config.right_motor.Forward(50)
     sleep(turn_time)
+    config.right_motor.off()
+    config.left_motor.off()
 
 def left_tap(
              left_inverted=False, right_inverted=False):

@@ -40,39 +40,32 @@ try:
         )
 
         # Return to the outer loop after each correction to reread sensors.
-        if too_left_signal:
-            motion.right_tap()
-        elif too_right_signal:
-            motion.left_tap()
-        elif stepcounter == 0:
+        if stepcounter == 0 and t_junction_signal:
             motion.forward()
-            if t_junction_signal:
-                motion.forward()
-                sleep(3)
-                stepcounter += 1
-
-        elif stepcounter == 1:
-            if left_turn_signal:
-                motion.turn_left_90()
-                stepcounter += 1
-        elif stepcounter == 2:
-            if left_turn_signal:
-                motion.turn_left_90()
-                stepcounter += 1
-        elif stepcounter == 3:
-            if t_junction_signal:
-                motion.stop()
-                sleep(1)
-                motion.turn_180()
-                stepcounter += 1
-        elif stepcounter == 4:
-            if left_turn_signal:
-                motion.turn_left_90()
-                stepcounter += 1
-        elif stepcounter == 5:
-            if left_turn_signal:
-                motion.forward()
-                stepcounter += 1
+            sleep(3)
+            stepcounter += 1
+        elif stepcounter == 1 and left_turn_signal:
+            motion.turn_left_90()
+            stepcounter += 1
+        elif stepcounter == 2 and left_turn_signal:
+            motion.forward()
+            motion.turn_left_90()
+            stepcounter += 1
+        elif stepcounter == 3 and t_junction_signal:
+            motion.stop()
+            sleep(1)
+            motion.turn_180()
+            stepcounter += 1
+        elif stepcounter == 4 and left_turn_signal:
+            motion.turn_left_90()
+            stepcounter += 1
+        elif stepcounter == 5 and left_turn_signal:
+            motion.forward()
+            stepcounter += 1
+        elif too_left_signal:
+                motion.right_tap()
+        elif too_right_signal:
+                motion.left_tap()
         else:
             motion.forward()
 finally:
