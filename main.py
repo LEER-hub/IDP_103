@@ -42,25 +42,59 @@ try:
         # Return to the outer loop after each correction to reread sensors.
         if stepcounter == 0 and t_junction_signal:
             motion.forward()
-            sleep(3)
+            sleep(1.2)
             stepcounter += 1
         elif stepcounter == 1 and left_turn_signal:
             motion.turn_left_90()
             stepcounter += 1
         elif stepcounter == 2 and left_turn_signal:
-            motion.forward()
             motion.turn_left_90()
             stepcounter += 1
         elif stepcounter == 3 and t_junction_signal:
             motion.stop()
             sleep(1)
+            motion.forward()
+            sleep(1.5)
             motion.turn_180()
             stepcounter += 1
-        elif stepcounter == 4 and left_turn_signal:
+        elif stepcounter == 4 and (left_turn_signal or t_junction_signal):
             motion.turn_left_90()
             stepcounter += 1
         elif stepcounter == 5 and left_turn_signal:
             motion.forward()
+            sleep(1.2)
+            stepcounter += 1
+        elif stepcounter == 6 and left_turn_signal:
+            motion.forward()
+            sleep(0.5)
+            stepcounter += 1
+        elif stepcounter == 7 and left_turn_signal:
+            motion.turn_left_90()
+            stepcounter += 1
+        elif stepcounter == 8:
+            motion.forward()
+            sleep(3)
+            motion.stop()
+            stepcounter += 1
+        elif stepcounter == 9:
+            sleep(1)
+            motion.turn_180()
+            stepcounter += 1
+        elif stepcounter == 10 and (right_turn_signal or t_junction_signal):
+            motion.turn_right_90()
+            stepcounter += 1
+        elif stepcounter == 11 and right_turn_signal:
+            motion.forward()
+            sleep(1.0)
+            stepcounter += 1
+        elif stepcounter == 12 and right_turn_signal:
+            motion.turn_right_90()
+            stepcounter += 1
+        elif stepcounter == 13 and t_junction_signal:
+            motion.forward()
+            sleep(3)
+            motion.stop()
+            sleep(30)
             stepcounter += 1
         elif too_left_signal:
                 motion.right_tap()
