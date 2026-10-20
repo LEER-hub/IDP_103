@@ -1,5 +1,4 @@
 from machine import Pin, PWM, ADC
-from time import sleep
 from motors import Motor
 
 left_motor = Motor(dirPin=4, PWMPin=5)

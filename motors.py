@@ -18,3 +18,4 @@ class Motor:
     def Reverse(self, speed=100):
         self.mDir.value(1)
         self.pwm.duty_u16(int(65535 * speed / 100))
+

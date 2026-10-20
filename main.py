@@ -1,5 +1,5 @@
-import line_follower
-import config
+import line_follower #conditions to take action
+import config #defining sensors
 from machine import Pin, PWM
 from utime import sleep
 import motion
@@ -117,4 +117,3 @@ finally:
 #9 turn around 180 
 #10 go staight
 #11 turn right
-    print("No turn detected.")
