@@ -1,6 +1,8 @@
 from utime import sleep
 import config
 
+# at speed 50, turn time = 1.54 forward time = 1.5 before turning
+
 def turn_left_90(turn_time=1.54,
                  left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
