@@ -10,6 +10,7 @@ left_detection_counter = 0
 right_detection_counter = 0
 crossroad_detection_counter = 0
 stepcounter = 0
+'''
 
 try:
     while True:
@@ -85,6 +86,7 @@ try:
             motion.forward()
 finally:
     motion.stop()
+'''
 
 '''
 #algo for line following:
@@ -153,3 +155,39 @@ finally:
 #this repeats
 #eventually we want to create a node path so the program can tell what direction it needs to turn to at what node to head to the next
 #a node detection is triggered by the line_follower.py's conditions of left turn signal right turn signal t junction signal etc
+import config
+from motion import turn_left_90, turn_right_90, turn_180, left_tap, right_tap, forward, reverse, stop
+from utime import sleep
+import motion
+motion.stop()
+print("Starting test_turns.py")
+sleep(3)
+try:
+    while True:
+        print("Turning left 90 degrees")
+        turn_left_90()
+        sleep(3)
+        '''
+        print("Turning right 90 degrees")
+        turn_right_90()
+        sleep(3)
+        print("Turning 180 degrees")
+        turn_180()
+        sleep(3)
+        print("Left tap")
+        left_tap()
+        sleep(3)
+        print("Right tap")
+        right_tap()
+        sleep(3)
+        print("Forward")
+        forward()
+        sleep(3)
+        print("Reverse")
+        reverse()
+        sleep(3)
+        '''
+except KeyboardInterrupt:
+         print("keyboard interrupted")
+finally:
+      stop()
