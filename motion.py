@@ -35,13 +35,13 @@ def turn_180(turn_time=1.46, left_inverted=False, right_inverted=False):
 
 def left_tap(
              left_inverted=False, right_inverted=False):
-    config.left_motor.Forward(70)
+    config.left_motor.Forward(60)
     config.right_motor.Forward(80)
 
 
 def right_tap(left_inverted=False, right_inverted=False):
     config.left_motor.Forward(80)
-    config.right_motor.Forward(70)
+    config.right_motor.Forward(60)
 
 
 def forward(speed=80):
