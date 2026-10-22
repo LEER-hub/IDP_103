@@ -1,28 +1,9 @@
-import line_follower #conditions to take action
 import config #defining sensors
 from machine import Pin, PWM
-from utime import sleep
+from utime import sleep,ticks_ms, ticks_diff
 import motion
+from line_follower import nodes, line_follow_algorithms_fourline
 
-'''
-try:
-    while True:
-        left_turn_signal, right_turn_signal, t_junction_signal = line_follower.line_follow_algorithms_fourline(
-        config.far_left_sensor.value() == 0,
-        config.middle_left_sensor.value() == 0,
-        config.middle_right_sensor.value() == 0,
-        config.far_right_sensor.value() == 0,
-    )
-        if left_turn_signal:
-            motion.turn_left_90()
-        elif right_turn_signal:
-            motion.turn_right_90()
-        elif t_junction_signal:
-            motion.forward()
-        else:
-            motion.forward()
-finally:
-    motion.stop()
 '''
 
 left_detection_counter = 0
@@ -107,6 +88,7 @@ finally:
     motion.stop()
 '''
 
+'''
 #algo for line following:
 #1. ignore first crossroad (t unction) and go straight
 #2. when left turn signal, turn left 90 degrees
@@ -121,6 +103,58 @@ finally:
 #11 turn right
 
 
+compass = ["north", "east", "south", "west"]
+robot_heading = 0 # compass[0] is north so robot begins north
+path = ["c0","s_n","c1","c2","c3","b3u"]
+node_counter = 0
+start = ticks_ms()
+try:
+    while True:
+        left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal = line_follow_algorithms_fourline(
+        config.far_left_sensor.value(),
+        config.middle_left_sensor.value(),
+        config.middle_right_sensor.value(),
+        config.far_right_sensor.value(),
+    )
+        if (left_turn_signal or right_turn_signal or t_junction_signal) and (ticks_diff(ticks_ms(),start) > 300):
+            node_counter += 1
+            current_node = path[node_counter]
+            if node_counter  == len(path) - 1:
+                motion.stop()
+                break
+            next_node = path[node_counter + 1]
+            robot_aim = nodes[current_node][next_node]
+            robot_turn_index = (compass.index(robot_aim)-robot_heading) % 4
+            if robot_turn_index == 0:
+                motion.forward()
+            elif robot_turn_index == 1:
+                motion.turn_right_90()
+                robot_heading += 1
+            elif robot_turn_index == 2:
+                motion.turn_180()
+                robot_heading += 2
+            elif robot_turn_index == 3:
+                motion.turn_left_90()
+                robot_heading -=1
+            start = ticks_ms()
+
+        else:
+            motion.forward()
+            if too_left_signal:
+                motion.right_tap()
+            elif too_right_signal:
+                motion.left_tap()
+finally:
+    motion.stop()
+
+
+
+#auto mapping plan
+#robot remembers the last node it passed alongside the direction it is facing after executing a motion on that node
+#e.g. lets say it detects node c0 then it executes a right turn then the heading updates and the next node is calculated
+#this repeats
+#eventually we want to create a node path so the program can tell what direction it needs to turn to at what node to head to the next
+#a node detection is triggered by the line_follower.py's conditions of left turn signal right turn signal t junction signal etc
 import config
 from motion import turn_left_90, turn_right_90, turn_180, left_tap, right_tap, forward, reverse, stop
 from utime import sleep
