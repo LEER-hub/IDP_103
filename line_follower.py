@@ -12,7 +12,8 @@ def line_follow_algorithms_fourline(far_left_sensor, middle_left_sensor, middle_
     t_junction_signal = far_left_sensor and middle_left_sensor and far_right_sensor and middle_right_sensor
     too_left_signal = middle_right_sensor and not (middle_left_sensor or far_left_sensor or far_right_sensor)
     too_right_signal = middle_left_sensor  and not (middle_right_sensor or far_right_sensor or far_left_sensor)
-    return left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal
+    no_path_signal = not (middle_left_sensor or middle_right_sensor or far_left_sensor or far_right_sensor)
+    return left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal, no_path_signal
 
 
 '''

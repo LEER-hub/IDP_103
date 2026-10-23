@@ -4,92 +4,6 @@ from utime import sleep,ticks_ms, ticks_diff
 import motion
 from line_follower import nodes, line_follow_algorithms_fourline
 
-'''
-
-left_detection_counter = 0
-right_detection_counter = 0
-crossroad_detection_counter = 0
-stepcounter = 0
-'''
-
-'''
-try:
-    while True:
-        left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal = line_follower.line_follow_algorithms_fourline(
-            config.far_left_sensor.value(),
-            config.middle_left_sensor.value(),
-            config.middle_right_sensor.value(),
-            config.far_right_sensor.value() 
-        )
-
-        # Return to the outer loop after each correction to reread sensors.
-        if stepcounter == 0 and t_junction_signal:
-            motion.forward()
-            sleep(1.2)
-            stepcounter += 1
-        elif stepcounter == 1 and left_turn_signal:
-            motion.turn_left_90()
-            stepcounter += 1
-        elif stepcounter == 2 and left_turn_signal:
-            motion.turn_left_90()
-            stepcounter += 1
-        elif stepcounter == 3 and t_junction_signal:
-            motion.stop()
-            sleep(1)
-            motion.forward()
-            sleep(1.5)
-            motion.turn_180()
-            stepcounter += 1
-        elif stepcounter == 4 and (left_turn_signal or t_junction_signal):
-            motion.turn_left_90()
-            stepcounter += 1
-        elif stepcounter == 5 and left_turn_signal:
-            motion.forward()
-            sleep(1.2)
-            stepcounter += 1
-        elif stepcounter == 6 and left_turn_signal:
-            motion.forward()
-            sleep(0.5)
-            stepcounter += 1
-        elif stepcounter == 7 and left_turn_signal:
-            motion.turn_left_90()
-            stepcounter += 1
-        elif stepcounter == 8:
-            motion.forward()
-            sleep(3)
-            motion.stop()
-            stepcounter += 1
-        elif stepcounter == 9:
-            sleep(1)
-            motion.turn_180()
-            stepcounter += 1
-        elif stepcounter == 10 and (right_turn_signal or t_junction_signal):
-            motion.turn_right_90()
-            stepcounter += 1
-        elif stepcounter == 11 and right_turn_signal:
-            motion.forward()
-            sleep(1.0)
-            stepcounter += 1
-        elif stepcounter == 12 and right_turn_signal:
-            motion.turn_right_90()
-            stepcounter += 1
-        elif stepcounter == 13 and t_junction_signal:
-            motion.forward()
-            sleep(3)
-            motion.stop()
-            sleep(30)
-            stepcounter += 1
-        elif too_left_signal:
-                motion.right_tap()
-        elif too_right_signal:
-                motion.left_tap()
-        else:
-            motion.forward()
-finally:
-    motion.stop()
-
-
-'''
 #algo for line following:
 #1. ignore first crossroad (t unction) and go straight
 #2. when left turn signal, turn left 90 degrees
@@ -105,13 +19,13 @@ finally:
 
 
 compass = ["north", "east", "south", "west"]
-robot_heading = 0 # compass[0] is north so robot begins north
-path = ["c0","s_n","c1","c2","c3","b3u"]
+robot_heading = 1 # compass[0] is north so robot begins north
+path = ["c0","s_e","r0","j_la3","la3","j_la3","j_la4","r1","r2","b2l","r2","r1","j_la4","j_la3","r0","s_e"]
 node_counter = 0
 start = ticks_ms()
 try:
     while True:
-        left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal = line_follow_algorithms_fourline(
+        left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal, no_path_signal = line_follow_algorithms_fourline(
         config.far_left_sensor.value(),
         config.middle_left_sensor.value(),
         config.middle_right_sensor.value(),
@@ -132,12 +46,25 @@ try:
                 motion.turn_right_90()
                 robot_heading += 1
             elif robot_turn_index == 2:
+                motion.forward(speed = 50)
+                sleep(1.5)
                 motion.turn_180()
                 robot_heading += 2
             elif robot_turn_index == 3:
                 motion.turn_left_90()
                 robot_heading -=1
             start = ticks_ms()
+
+        elif no_path_signal and path[node_counter] in ("l1", "l2", "l3", "l4", "l5", "l6", "r1", "r2", "r3", "r4", "r5", "r6", "c1", "c2", "c3", "c4", "c5", "c6"):
+            node_counter += 1
+            current_node = path[node_counter]
+            if node_counter  == len(path) - 1:
+                motion.stop()
+                break
+            else:
+                motion.turn_180()
+                robot_heading += 2
+
 
         else:
             motion.forward()
