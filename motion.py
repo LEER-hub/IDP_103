@@ -59,6 +59,9 @@ def turn_right_90(turn_min=1300, turn_max = 2500,
 
 def turn_180(turn_min=2500, turn_max = 4000,
                  left_inverted=False, right_inverted=False):
+    config.left_motor.reverse(50)
+    config.right_motor.reverse(50)
+    sleep(1)
     config.right_motor.Reverse(50)
     config.left_motor.Forward(50)
     start = ticks_ms()
