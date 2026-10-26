@@ -22,6 +22,8 @@ compass = ["north", "east", "south", "west"]
 robot_heading = 1 # compass[0] is north so robot begins north
 path = ["c0","s_e","r0","j_la3","la3","j_la3","j_la4","r1","r2","b2l","r2","r1","j_la4","j_la3","r0","s_e"]
 tight_nodes = tuple(prefix + str(number) for prefix in ("c", "r", "l") for number in range(1, 7))
+drop_nodes = tuple(node for node in nodes if node.endswith(("u", "l")))
+short_nodes = ("la1", "la2", "la3", "la4")
 node_counter = 0
 start = ticks_ms()
 try:
@@ -35,6 +37,7 @@ try:
         if (left_turn_signal or right_turn_signal or t_junction_signal) and (ticks_diff(ticks_ms(),start) > 300):
             node_counter += 1
             current_node = path[node_counter]
+            previous_node = path[node_counter -1]
             if node_counter  == len(path) - 1:
                 motion.stop()
                 break
@@ -44,18 +47,19 @@ try:
             if robot_turn_index == 0:
                 motion.forward()
             elif robot_turn_index == 1:
-                if current_node in tight_nodes:
+                if (current_node in tight_nodes) and (previous_node in drop_nodes):
                     motion.tight_turn_right_90()
                 else:
                     motion.turn_right_90()
                 robot_heading += 1
             elif robot_turn_index == 2:
-                motion.forward(speed = 50)
-                sleep(1.5)
-                motion.turn_180()
+                if current_node in short_nodes:
+                    motion.short_turn_180()
+                else:
+                    motion.turn_180()
                 robot_heading += 2
             elif robot_turn_index == 3:
-                if current_node in tight_nodes:
+                if (current_node in tight_nodes) and (previous_node in drop_nodes):
                     motion.tight_turn_left_90()
                 else:
                     motion.turn_left_90()

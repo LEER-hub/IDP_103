@@ -34,7 +34,7 @@ def turn_right_90(turn_min=1300, turn_max = 2500,
                  left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
-    sleep(1.5)
+    sleep(1.55)
     config.right_motor.Reverse(50)
     config.left_motor.Forward(50)
     start = ticks_ms()
@@ -57,11 +57,39 @@ def turn_right_90(turn_min=1300, turn_max = 2500,
                 config.left_motor.Forward(50)
                 config.right_motor.Reverse(50)
 
-def turn_180(turn_min=2500, turn_max = 4000,
+def turn_180(turn_min=3400, turn_max = 4500,
                  left_inverted=False, right_inverted=False):
-    config.left_motor.reverse(50)
-    config.right_motor.reverse(50)
+    config.left_motor.Reverse(50)
+    config.right_motor.Reverse(50)
     sleep(1)
+    config.right_motor.Reverse(50)
+    config.left_motor.Forward(50)
+    start = ticks_ms()
+    overlap_timer = None
+    while True:
+        elapsed = ticks_diff(ticks_ms(), start)
+        if elapsed > turn_max:
+            stop()
+            break
+        elif elapsed > turn_min:
+            if config.middle_left_sensor.value() and config.middle_right_sensor.value():
+                if overlap_timer is None:
+                    overlap_timer = ticks_ms()
+                
+                elif ticks_diff(ticks_ms(), overlap_timer) >= 100:
+                    config.right_motor.off()
+                    config.left_motor.off()
+                    return
+            else:
+                overlap_timer = None
+                config.left_motor.Forward(50)
+                config.right_motor.Reverse(50)
+
+def short_turn_180(turn_min=2500, turn_max = 4000,
+                 left_inverted=False, right_inverted=False):
+    config.right_motor.Forward(50)
+    config.left_motor.Forward(50)
+    sleep(1.5)
     config.right_motor.Reverse(50)
     config.left_motor.Forward(50)
     start = ticks_ms()
@@ -89,7 +117,7 @@ def tight_turn_right_90(turn_min=1300, turn_max = 2500,
                  left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
-    sleep(1.5)
+    sleep(1.55)
     config.right_motor.Reverse(50)
     config.left_motor.Forward(50)
     start = ticks_ms()
@@ -108,7 +136,7 @@ def tight_turn_right_90(turn_min=1300, turn_max = 2500,
                     config.left_motor.off()
                     config.right_motor.Reverse(50)
                     config.left_motor.Reverse(50)
-                    sleep(0.7)
+                    sleep(1)
                     stop()
                     return
             else:
@@ -140,7 +168,7 @@ def tight_turn_left_90(turn_min=1300, turn_max = 2500,
                     config.left_motor.off()
                     config.right_motor.Reverse(50)
                     config.left_motor.Reverse(50)
-                    sleep(0.7)
+                    sleep(1)
                     stop()
                     return
             else:
