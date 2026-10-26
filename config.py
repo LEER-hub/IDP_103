@@ -1,6 +1,7 @@
 from machine import Pin, PWM, ADC, I2C
 from motors import Motor
 from libs.VL53L0X.VL53L0X import VL53L0X
+from test_servo1 import Servo
 
 # Motors
 left_motor = Motor(dirPin=4, PWMPin=5)
@@ -29,4 +30,6 @@ i2c_bus = I2C(id=0, sda=Pin(6), scl=Pin(7))
 vl53l0 = VL53L0X(i2c_bus)
 vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[0], 18)
 vl53l0.set_Vcsel_pulse_period(vl53l0.vcsel_period_type[1], 14)
-'''
+
+servo1 = Servo(Pin(13))  # Connected to Servo 2
+servo2 = Servo(Pin(15))  # Connected to Servo 2
