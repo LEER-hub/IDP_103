@@ -21,6 +21,7 @@ from line_follower import nodes, line_follow_algorithms_fourline
 compass = ["north", "east", "south", "west"]
 robot_heading = 1 # compass[0] is north so robot begins north
 path = ["c0","s_e","r0","j_la3","la3","j_la3","j_la4","r1","r2","b2l","r2","r1","j_la4","j_la3","r0","s_e"]
+tight_nodes = tuple(prefix + str(number) for prefix in ("c", "r", "l") for number in range(1, 7))
 node_counter = 0
 start = ticks_ms()
 try:
@@ -43,7 +44,10 @@ try:
             if robot_turn_index == 0:
                 motion.forward()
             elif robot_turn_index == 1:
-                motion.turn_right_90()
+                if current_node in tight_nodes:
+                    motion.tight_turn_right_90()
+                else:
+                    motion.turn_right_90()
                 robot_heading += 1
             elif robot_turn_index == 2:
                 motion.forward(speed = 50)
@@ -51,11 +55,14 @@ try:
                 motion.turn_180()
                 robot_heading += 2
             elif robot_turn_index == 3:
-                motion.turn_left_90()
+                if current_node in tight_nodes:
+                    motion.tight_turn_left_90()
+                else:
+                    motion.turn_left_90()
                 robot_heading -=1
             start = ticks_ms()
 
-        elif no_path_signal and path[node_counter] in ("l1", "l2", "l3", "l4", "l5", "l6", "r1", "r2", "r3", "r4", "r5", "r6", "c1", "c2", "c3", "c4", "c5", "c6"):
+        elif no_path_signal and path[node_counter] in tight_nodes:
             node_counter += 1
             current_node = path[node_counter]
             if node_counter  == len(path) - 1:
