@@ -2,9 +2,9 @@ from machine import ADC, Pin
 from time import sleep
 
 hall = ADC(26)  # GP26 / ADC0
-north_pin = Pin(21, Pin.OUT)
-south_pin = Pin(20, Pin.OUT)
-amber_led = Pin(19, Pin.OUT)
+north_pin = Pin(20, Pin.OUT)
+south_pin = Pin(19, Pin.OUT)
+# amber_led = Pin(21, Pin.OUT)
 
 
 while True:
@@ -27,5 +27,5 @@ while True:
         south_pin.value(0)
 
     print("ADC:", value, "| Voltage:", round(voltage, 3), "V")
-    amber_led.toggle()
+    # amber_led.toggle()
     sleep(0.4)
