@@ -1,7 +1,7 @@
 from machine import Pin
 from time import sleep
 
-amber_led = Pin(19, Pin.OUT)
+amber_led = Pin(21, Pin.OUT)
 
 while True:
     amber_led.toggle()

@@ -1,5 +1,6 @@
 from machine import Pin, PWM
 import time
+import motion
 
 
 class Servo:
@@ -33,46 +34,21 @@ servo1 = Servo(Pin(13))  # Connected to Servo 1
 servo2 = Servo(Pin(15))  # Connected to Servo 2
 
 
-def test_positions1():
-    while True:
-        print("Move to 0°")
-        servo1.set_angle(0)
-        time.sleep(2)
-
-        print("Move to 15° (centre)")
-        servo1.set_angle(15)
-        time.sleep(2)
-
-        print("Move to 30°")
-        servo1.set_angle(30)
-        time.sleep(2)
+def pickup():
+    servo1.set_angle(65)
+    time.sleep(2)
+    servo2.set_angle(0)
+    # motion.forward(30)
+    time.sleep(2)
+    servo1.set_angle(17.5)
+    time.sleep(2)
+    servo2.set_angle(60)
 
 
-# Run test
-# test_positions1()
+def dropoff():
+    time.sleep(2)
+    servo1.set_angle(65)
 
 
-def test_positions2():
-    while True:
-        print("Move to 0°")
-        servo2.set_angle(0)
-        time.sleep(2)
-
-        print("Move to 15° (centre)")
-        servo2.set_angle(15)
-        time.sleep(2)
-
-        print("Move to 30°")
-        servo2.set_angle(30)
-        time.sleep(2)
-
-
-# Run test
-# test_positions2()
-
-
-# servo1.set_angle(20)
-servo2.set_angle(30)
-# servo2.set_angle(10)
-# time.sleep(2)
-# servo2.set_angle(30)
+# dropoff()
+pickup()
