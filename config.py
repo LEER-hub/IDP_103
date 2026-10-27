@@ -25,6 +25,7 @@ south_pin = Pin(20, Pin.OUT)
 
 
 # Distance sensor
+'''
 
 i2c_bus = I2C(id=0, sda=Pin(6), scl=Pin(7))
 vl53l0 = VL53L0X(i2c_bus)

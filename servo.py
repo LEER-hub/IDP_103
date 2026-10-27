@@ -35,20 +35,27 @@ servo2 = Servo(Pin(15))  # Connected to Servo 2
 
 
 def pickup():
+    motion.stop()
     servo1.set_angle(65)
     time.sleep(2)
     servo2.set_angle(0)
-    # motion.forward(30)
-    time.sleep(2)
+    motion.forward(50)
+    time.sleep(1)
+    motion.stop()
     servo1.set_angle(17.5)
     time.sleep(2)
-    servo2.set_angle(60)
+    servo2.set_angle(55)
+    time.sleep(2)
 
 
 def dropoff():
+    motion.stop()
+    time.sleep(2)
+    motion.forward(50)
+    time.sleep(0.3)
+    motion.stop()
     time.sleep(2)
     servo1.set_angle(65)
 
 
 # dropoff()
-pickup()
