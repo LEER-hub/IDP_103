@@ -3,11 +3,9 @@ from time import sleep, sleep_ms
 import motion
 
 
-on_off_switch = Pin(18, Pin.IN)  # not pressed = 1, pressed = 0
-amber_led = Pin(19, Pin.OUT)
+on_off_switch = Pin(12, Pin.IN)  # not pressed = 1, pressed = 0
 
 motion.stop()
-amber_led.value(0)
 running = False
 last_state = 1  # initially unpressed
 
@@ -18,7 +16,7 @@ while True:
         motion.stop()
         if running:
             print("ON")
-            motion.forward()
+
         else:
             print("OFF")
             motion.stop()
