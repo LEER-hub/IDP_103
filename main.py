@@ -3,7 +3,7 @@ from machine import Pin, PWM
 from utime import sleep,ticks_ms, ticks_diff
 import motion
 from line_follower import nodes, line_follow_algorithms_fourline
-from servo import dropoff,pickup,open_gripper
+from servo import dropoff,pickup
 
 #algo for line following:
 #1. ignore first crossroad (t unction) and go straight
@@ -27,7 +27,6 @@ drop_nodes = tuple(node for node in nodes if node.endswith(("u", "l")))
 short_nodes = ("la1", "la2", "la3", "la4")
 node_counter = 0
 start = ticks_ms()
-open_gripper()
 try:
     while True:
         left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal, no_path_signal = line_follow_algorithms_fourline(
@@ -104,3 +103,4 @@ finally:
 #this repeats
 #eventually we want to create a node path so the program can tell what direction it needs to turn to at what node to head to the next
 #a node detection is triggered by the line_follower.py's conditions of left turn signal right turn signal t junction signal etc
+
