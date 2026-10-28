@@ -1,6 +1,6 @@
 from utime import sleep, ticks_ms, ticks_diff
 import config
-from servo import dropoff
+import servo
 
 def turn_left_90(turn_min=1300, turn_max = 4000,
                  left_inverted=False, right_inverted=False):
@@ -180,11 +180,28 @@ def tight_turn_left_90(turn_min=1300, turn_max = 2500,
                 config.left_motor.Reverse(50)
                 config.right_motor.Forward(50)
 
-def grab():
-    pass
+def pickup():
+    stop()
+    servo.servo1.set_angle(65)
+    sleep(2)
+    servo.servo2.set_angle(0)
+    forward(50)
+    sleep(1)
+    stop()
+    servo.servo1.set_angle(17.5)
+    sleep(2)
+    servo.servo2.set_angle(55)
+    sleep(2)
 
-def drop():
-    pass
+
+def dropoff():
+    stop()
+    sleep(2)
+    forward(50)
+    sleep(0.3)
+    stop()
+    sleep(2)
+    servo.servo1.set_angle(65)
 
 def left_tap(
              left_inverted=False, right_inverted=False): 

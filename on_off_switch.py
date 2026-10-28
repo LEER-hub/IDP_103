@@ -9,7 +9,8 @@ motion.stop()
 running = False
 last_state = 1  # initially unpressed
 
-while True:
+def check_switch():
+    global running,last_state
     state = on_off_switch.value()
     if state == 0 and last_state == 1:
         running = not running
@@ -21,6 +22,5 @@ while True:
             print("OFF")
             motion.stop()
         sleep_ms(200)  # debounce
-
     last_state = state
-    sleep_ms(10)
+    return(running)
