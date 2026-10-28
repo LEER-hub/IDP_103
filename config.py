@@ -1,7 +1,6 @@
 from machine import Pin, PWM, ADC, I2C
 from motors import Motor
 from libs.VL53L0X.VL53L0X import VL53L0X
-from test_servo import Servo
 
 # Motors
 left_motor = Motor(dirPin=4, PWMPin=5)
