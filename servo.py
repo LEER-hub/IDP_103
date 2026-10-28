@@ -9,8 +9,9 @@ class Servo:
     # Pico 16-bit duty: 0.025 * 65535 = 1638, 0.125 * 65535 = 8192
     MIN_DUTY = 1638    # 0.5 ms (0°)
     MAX_DUTY = 8192    # 2.5 ms (full travel)
-    SERVO_RANGE = 90   # physical travel of the servo (change to 270 if needed)
-    MAX_ANGLE = 80     # limit we allow
+    # physical travel of the servo (change to 270 if needed)
+    SERVO_RANGE = 150
+    MAX_ANGLE = 150     # limit we allow
 
     def __init__(self, ServoPin):
         self.servo = PWM(ServoPin)
@@ -36,13 +37,13 @@ servo2 = Servo(Pin(15))  # Connected to Servo 2
 
 def pickup():
     motion.stop()
-    servo1.set_angle(65)
+    servo1.set_angle(120)
     time.sleep(2)
     servo2.set_angle(0)
     motion.forward(50)
     time.sleep(1)
     motion.stop()
-    servo1.set_angle(17.5)
+    servo1.set_angle(55)
     time.sleep(2)
     servo2.set_angle(55)
     time.sleep(2)
@@ -55,7 +56,8 @@ def dropoff():
     time.sleep(0.3)
     motion.stop()
     time.sleep(2)
-    servo1.set_angle(65)
+    servo1.set_angle(150)
 
 
-# dropoff()
+# pickup()
+# servo1.set_angle(0)
