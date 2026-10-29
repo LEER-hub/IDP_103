@@ -16,3 +16,7 @@ def nodeskip(previous_node,current_node, next_node):
         return True
     else:
         return False
+
+right_pickup = ["c0","s_e","r0","j_la3","la3","j_la3"]
+left_pickup = ["c0","s_w","l0","j_la2","la2","j_la2"]
+right_dropoff = []
