@@ -1,8 +1,7 @@
 from utime import sleep, ticks_ms, ticks_diff
 import config
-import servo
 
-def turn_left_90(turn_min=1300, turn_max = 4000,
+def turn_left_90(turn_min=1100, turn_max = 4000,
                  left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
@@ -20,7 +19,7 @@ def turn_left_90(turn_min=1300, turn_max = 4000,
             if config.middle_left_sensor.value() and config.middle_right_sensor.value():
                 if line_detected_since is None:
                     line_detected_since = ticks_ms()
-                elif ticks_diff(ticks_ms(), line_detected_since) >= 125:
+                elif ticks_diff(ticks_ms(), line_detected_since) >= 100:
                     config.right_motor.off()
                     config.left_motor.off()
                     return
@@ -31,7 +30,7 @@ def turn_left_90(turn_min=1300, turn_max = 4000,
 
 
 
-def turn_right_90(turn_min=1300, turn_max = 4000,
+def turn_right_90(turn_min=1100, turn_max = 4000,
                  left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
@@ -49,7 +48,7 @@ def turn_right_90(turn_min=1300, turn_max = 4000,
             if config.middle_left_sensor.value() and config.middle_right_sensor.value():
                 if line_detected_since is None:
                     line_detected_since = ticks_ms()
-                elif ticks_diff(ticks_ms(), line_detected_since) >= 125:
+                elif ticks_diff(ticks_ms(), line_detected_since) >= 100:
                     config.right_motor.off()
                     config.left_motor.off()
                     return
@@ -182,15 +181,15 @@ def tight_turn_left_90(turn_min=1300, turn_max = 2500,
 
 def pickup():
     stop()
-    servo.servo1.set_angle(65)
+    config.servo1.set_angle(150)
     sleep(2)
-    servo.servo2.set_angle(0)
+    config.servo2.set_angle(0)
     forward(50)
     sleep(1)
     stop()
-    servo.servo1.set_angle(17.5)
+    config.servo1.set_angle(50)
     sleep(2)
-    servo.servo2.set_angle(55)
+    config.servo2.set_angle(130)
     sleep(2)
 
 
@@ -201,7 +200,7 @@ def dropoff():
     sleep(0.3)
     stop()
     sleep(2)
-    servo.servo1.set_angle(65)
+    config.servo1.set_angle(130)
 
 def left_tap(
              left_inverted=False, right_inverted=False): 
@@ -226,3 +225,8 @@ def reverse(speed=80):
 def stop():
    config.left_motor.off()
    config.right_motor.off()
+
+def amber_led_toggle():
+    while True:
+        config.amber_led.toggle()
+        sleep(1)

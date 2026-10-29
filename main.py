@@ -1,20 +1,25 @@
 import config #defining sensors
+import _thread
 from machine import Pin, PWM
 from utime import sleep,ticks_ms, ticks_diff
 import motion
 from line_follower import nodes, line_follow_algorithms_fourline
-from servo import dropoff,pickup
 from on_off_switch import check_switch
 from paths import tight_nodes,short_nodes,nodeskip,get_turn
 
 
-
 #field mapping implementation
-robot_heading = 1 # compass[0] is north so robot begins north
-path = ["c0","s_e","r0","j_la3","la3","j_la3","j_la4","r1","r2","b2l","r2","r1","j_la4","j_la3","r0","s_e","c0"]
+robot_heading = 1 # compass[0] is north so robot begins east
+path = ["c0","s_e","r0","j_la3","la3","j_la3","j_la4","r1","r2","b2l","r2","r1","j_la4","j_la3","r0","s_e","c0",
+        "s_w","l0","j_la2","la2", "j_la2","j_la1","l1","l2","a2l","l2","l1","j_la1","j_la2","l0","s_w","c0",
+        "s_e","r0","j_la3","j_la4","la4","j_la4","r1","r2","r3","b3l","r3","r2","r1","j_la4","j_la3","r0","s_e","c0",
+        "s_w","l0","j_la1","la1","j_la1","l1","a1l","l1","j_la1","j_la2","l0","s_w","c0"]
 node_counter = 0
 start = ticks_ms()
 try:
+
+    config.servo1.set_angle(150)
+    config.servo2.set_angle(0)
     while True:
         if not check_switch():
             motion.stop()
@@ -35,24 +40,24 @@ try:
             if node_counter  == len(path) - 1:
                 motion.stop()
                 break
-            robot_turn_index = get_turn(current_node, next_node, robot_heading)
             next_node = path[node_counter + 1]
-            if get_turn == 0:
+            robot_turn_index = get_turn(current_node, next_node, robot_heading)
+            if robot_turn_index == 0:
                 motion.forward()
-            elif get_turn == 1:
+            elif robot_turn_index == 1:
                 motion.turn_right_90()
                 if nodeskip(previous_node,current_node,next_node):
-                    node_counter += 1
+                    node_counter += 1 
                 robot_heading += 1
-            elif get_turn == 2:
+            elif robot_turn_index == 2:
                 if current_node in short_nodes:
-                    motion.stop
-                    pickup()
+                    motion.stop()
+                    motion.pickup()
                     motion.short_turn_180()
                 else:
                     motion.turn_180()
                 robot_heading += 2
-            elif get_turn == 3:
+            elif robot_turn_index == 3:
                 motion.turn_left_90()
                 if nodeskip(previous_node,current_node,next_node):
                     node_counter += 1

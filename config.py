@@ -1,5 +1,6 @@
 from machine import Pin, PWM, ADC, I2C
 from motors import Motor
+from servo import Servo
 from libs.VL53L0X.VL53L0X import VL53L0X
 
 # Motors

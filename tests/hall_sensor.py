@@ -10,14 +10,17 @@ south_pin = Pin(19, Pin.OUT)
 while True:
     value = hall.read_u16()
     voltage = value * 3.3 / 65535
+    polarity = None
 
     if voltage < 1.74:
         print("South Pole")
+        polarity = "south"
         south_pin.value(1)
         north_pin.value(0)
 
     elif voltage > 2.24:
         print("North Pole")
+        polairty = "north"
         north_pin.value(1)
         south_pin.value(0)
 
