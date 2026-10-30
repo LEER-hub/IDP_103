@@ -1,6 +1,5 @@
 from machine import Pin, PWM
 import time
-import motion
 
 
 class Servo:
@@ -30,34 +29,4 @@ class Servo:
         self.servo.duty_u16(duty)
 
 
-# Test Code
-servo1 = Servo(Pin(13))  # Connected to Servo 1
-servo2 = Servo(Pin(15))  # Connected to Servo 2
-
-
-def pickup():
-    motion.stop()
-    servo1.set_angle(120)
-    time.sleep(2)
-    servo2.set_angle(0)
-    motion.forward(50)
-    time.sleep(1)
-    motion.stop()
-    servo1.set_angle(55)
-    time.sleep(2)
-    servo2.set_angle(55)
-    time.sleep(2)
-
-
-def dropoff():
-    motion.stop()
-    time.sleep(2)
-    motion.forward(50)
-    time.sleep(0.3)
-    motion.stop()
-    time.sleep(2)
-    servo1.set_angle(150)
-
-
-# pickup()
-# servo1.set_angle(0)
+# dropoff()
