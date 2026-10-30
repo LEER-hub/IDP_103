@@ -25,6 +25,8 @@ try:
             sleep(0.01)
             continue
 
+        _thread.start_new_thread(motion.amber_led_toggle, ())
+
         left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal, no_path_signal = line_follow_algorithms_fourline(
             config.far_left_sensor.value(),
             config.middle_left_sensor.value(),
