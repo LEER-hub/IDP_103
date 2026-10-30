@@ -8,7 +8,8 @@ class Servo:
     # Pico 16-bit duty: 0.025 * 65535 = 1638, 0.125 * 65535 = 8192
     MIN_DUTY = 1638    # 0.5 ms (0°)
     MAX_DUTY = 8192    # 2.5 ms (full travel)
-    SERVO_RANGE = 150   # physical travel of the servo (change to 270 if needed)
+    # physical travel of the servo (change to 270 if needed)
+    SERVO_RANGE = 150
     MAX_ANGLE = 150     # limit we allow
 
     def __init__(self, ServoPin):
@@ -26,8 +27,6 @@ class Servo:
         duty = int(Servo.MIN_DUTY + (angle / Servo.SERVO_RANGE) *
                    (Servo.MAX_DUTY - Servo.MIN_DUTY))
         self.servo.duty_u16(duty)
-
-
 
 
 # dropoff()

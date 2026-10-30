@@ -1,7 +1,8 @@
 from utime import sleep, ticks_ms, ticks_diff
 import config
 
-def turn_left_90(turn_min=1100, turn_max = 4000,
+
+def turn_left_90(turn_min=1100, turn_max=4000,
                  left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
@@ -29,9 +30,8 @@ def turn_left_90(turn_min=1100, turn_max = 4000,
                 config.right_motor.Forward(50)
 
 
-
-def turn_right_90(turn_min=1100, turn_max = 4000,
-                 left_inverted=False, right_inverted=False):
+def turn_right_90(turn_min=1100, turn_max=4000,
+                  left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
     sleep(1.7)
@@ -57,13 +57,13 @@ def turn_right_90(turn_min=1100, turn_max = 4000,
                 config.left_motor.Forward(50)
                 config.right_motor.Reverse(50)
 
-def turn_180(turn_min=4000, turn_max = 4500,
-                 left_inverted=False, right_inverted=False):
+
+def turn_180(turn_min=4000, turn_max=4500,
+             left_inverted=False, right_inverted=False):
     config.left_motor.off()
     config.right_motor.off()
     dropoff()
     sleep(2)
-
 
     config.left_motor.Reverse(50)
     config.right_motor.Reverse(50)
@@ -81,7 +81,7 @@ def turn_180(turn_min=4000, turn_max = 4500,
             if config.middle_left_sensor.value() and config.middle_right_sensor.value():
                 if overlap_timer is None:
                     overlap_timer = ticks_ms()
-                
+
                 elif ticks_diff(ticks_ms(), overlap_timer) >= 100:
                     config.right_motor.off()
                     config.left_motor.off()
@@ -91,8 +91,9 @@ def turn_180(turn_min=4000, turn_max = 4500,
                 config.left_motor.Forward(50)
                 config.right_motor.Reverse(50)
 
-def short_turn_180(turn_min=2500, turn_max = 4000,
-                 left_inverted=False, right_inverted=False):
+
+def short_turn_180(turn_min=2500, turn_max=4000,
+                   left_inverted=False, right_inverted=False):
     config.right_motor.Forward(50)
     config.left_motor.Forward(50)
     sleep(0.5)
@@ -109,7 +110,7 @@ def short_turn_180(turn_min=2500, turn_max = 4000,
             if config.middle_left_sensor.value() and config.middle_right_sensor.value():
                 if overlap_timer is None:
                     overlap_timer = ticks_ms()
-                
+
                 elif ticks_diff(ticks_ms(), overlap_timer) >= 130:
                     config.right_motor.off()
                     config.left_motor.off()
@@ -119,8 +120,9 @@ def short_turn_180(turn_min=2500, turn_max = 4000,
                 config.left_motor.Forward(50)
                 config.right_motor.Reverse(50)
 
-def tight_turn_right_90(turn_min=1300, turn_max = 2500,
-                 left_inverted=False, right_inverted=False):
+
+def tight_turn_right_90(turn_min=1300, turn_max=2500,
+                        left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
     sleep(1.6)
@@ -148,8 +150,8 @@ def tight_turn_right_90(turn_min=1300, turn_max = 2500,
                 config.right_motor.Reverse(50)
 
 
-def tight_turn_left_90(turn_min=1300, turn_max = 2500,
-                 left_inverted=False, right_inverted=False):
+def tight_turn_left_90(turn_min=1300, turn_max=2500,
+                       left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
     sleep(1.6)
@@ -179,15 +181,16 @@ def tight_turn_left_90(turn_min=1300, turn_max = 2500,
                 config.left_motor.Reverse(50)
                 config.right_motor.Forward(50)
 
+
 def pickup():
     stop()
-    config.servo1.set_angle(150)
+    config.servo1.set_angle(137.5)
     sleep(2)
     config.servo2.set_angle(0)
     forward(50)
     sleep(1)
     stop()
-    config.servo1.set_angle(50)
+    config.servo1.set_angle(37.5)
     sleep(2)
     config.servo2.set_angle(130)
     sleep(2)
@@ -202,8 +205,9 @@ def dropoff():
     sleep(2)
     config.servo1.set_angle(130)
 
+
 def left_tap(
-             left_inverted=False, right_inverted=False): 
+        left_inverted=False, right_inverted=False):
     config.left_motor.Forward(40)
     config.right_motor.Forward(80)
 
@@ -217,14 +221,16 @@ def forward(speed=80):
     config.left_motor.Forward(speed)
     config.right_motor.Forward(speed)
 
+
 def reverse(speed=80):
     config.left_motor.Reverse(speed)
     config.right_motor.Reverse(speed)
 
 
 def stop():
-   config.left_motor.off()
-   config.right_motor.off()
+    config.left_motor.off()
+    config.right_motor.off()
+
 
 def amber_led_toggle():
     while True:
