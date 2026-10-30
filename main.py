@@ -5,15 +5,13 @@ from utime import sleep,ticks_ms, ticks_diff
 import motion
 from line_follower import nodes, line_follow_algorithms_fourline
 from on_off_switch import check_switch
-from paths import tight_nodes,short_nodes,nodeskip,get_turn
+from paths import tight_nodes,short_nodes,nodeskip,get_turn,right_close_pickup
 
 
 #field mapping implementation
 robot_heading = 1 # compass[0] is north so robot begins east
-path = ["c0","s_e","r0","j_la3","la3","j_la3","j_la4","r1","r2","b2l","r2","r1","j_la4","j_la3","r0","s_e","c0",
-        "s_w","l0","j_la2","la2", "j_la2","j_la1","l1","l2","a2l","l2","l1","j_la1","j_la2","l0","s_w","c0",
-        "s_e","r0","j_la3","j_la4","la4","j_la4","r1","r2","r3","b3l","r3","r2","r1","j_la4","j_la3","r0","s_e","c0",
-        "s_w","l0","j_la1","la1","j_la1","l1","a1l","l1","j_la1","j_la2","l0","s_w","c0"]
+path = []
+path.extend(right_close_pickup)
 node_counter = 0
 start = ticks_ms()
 try:
