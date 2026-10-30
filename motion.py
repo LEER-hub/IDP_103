@@ -208,21 +208,21 @@ def dropoff():
 
 def left_tap(
         left_inverted=False, right_inverted=False):
-    config.left_motor.Forward(40)
-    config.right_motor.Forward(80)
+    config.left_motor.Forward(50)
+    config.right_motor.Forward(100)
 
 
 def right_tap(left_inverted=False, right_inverted=False):
-    config.left_motor.Forward(80)
-    config.right_motor.Forward(40)
+    config.left_motor.Forward(100)
+    config.right_motor.Forward(50)
 
 
-def forward(speed=80):
+def forward(speed=100):
     config.left_motor.Forward(speed)
     config.right_motor.Forward(speed)
 
 
-def reverse(speed=80):
+def reverse(speed=100):
     config.left_motor.Reverse(speed)
     config.right_motor.Reverse(speed)
 
