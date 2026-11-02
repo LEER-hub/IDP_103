@@ -14,16 +14,16 @@ middle_right_sensor = Pin(10, Pin.IN, Pin.PULL_UP)
 far_right_sensor = Pin(11, Pin.IN, Pin.PULL_UP)
 
 # Flashing amber LED
-amber_led = Pin(19, Pin.OUT)
+amber_led = Pin(21, Pin.OUT)
 
 # Hall sensor
 hall_sensor = ADC(26)
 
 # North and south LED's
-north_pin = Pin(21, Pin.OUT)
-south_pin = Pin(20, Pin.OUT)
+north_pin = Pin(20, Pin.OUT)
+south_pin = Pin(19, Pin.OUT)
 
-#on off switch
+# on off switch
 on_off_switch = Pin(12, Pin.IN)  # not pressed = 1, pressed = 0
 
 # Distance sensor
