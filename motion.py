@@ -183,7 +183,7 @@ def tight_turn_left_90(turn_min=1300, turn_max=2500,
 
 def pickup():
     stop()
-    config.servo1.set_angle(137.5)
+    config.servo1.set_angle(132.5)
     sleep(2)
     config.servo2.set_angle(0)
     forward(50)
@@ -191,7 +191,7 @@ def pickup():
     stop()
     config.servo1.set_angle(37.5)
     sleep(2)
-    config.servo2.set_angle(130)
+    config.servo2.set_angle(125)
     sleep(2)
 
 
@@ -235,3 +235,34 @@ def amber_led_toggle():
     while True:
         config.amber_led.toggle()
         sleep(1)
+
+
+def check_hall_sensor():    # logic from hall_sensor.py
+    value = config.hall.read_u16()
+    voltage = value * 3.3 / 65535
+    polarity = None
+
+    if voltage < 1.80:
+        print("South Pole")
+        polarity = "south"
+        south_pin.value(1)
+        north_pin.value(0)
+
+    elif voltage > 2.20:
+        print("North Pole")
+        polarity = "north"
+        north_pin.value(1)
+        south_pin.value(0)
+
+    else:
+        print("No magnet detected")
+        north_pin.value(0)
+        south_pin.value(0)
+
+    print("ADC:", value, "| Voltage:", round(voltage, 3), "V")
+    # amber_led.toggle()
+    sleep(0.4)
+
+
+# pickup()
+# dropoff()
