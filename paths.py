@@ -1,7 +1,15 @@
 from line_follower import nodes
+import motion
 tight_nodes = tuple(prefix + str(number) for prefix in ("c", "r", "l") for number in range(1, 7))
 drop_nodes = tuple(node for node in nodes if node.endswith(("u", "l")))
 short_nodes = ("la1", "la2", "la3", "la4")
+
+right_nodes = [
+    "s_e", "r0", "j_la3", "la3", "j_la4", "la4",
+    "r1", "r2", "r3", "r4", "r5", "r6", "end_r",
+    "b1u", "b2u", "b3u", "b4u", "b5u", "b6u",
+    "b1l", "b2l", "b3l", "b4l", "b5l", "b6l",
+]
 
 COMPASS = ("north", "east", "south", "west")
 
@@ -78,6 +86,78 @@ def breadth_first_search_algo (start_node, target_node):
                 queue.append(neighbour)
                 previous[neighbour] = node
 
-    return path
+    return None
 
-print(breadth_first_search_algo("c0","r5"))
+boxheld_previous = 0
+boxheld_current = 0
+path = []
+path.extend(breadth_first_search_algo("c0","la3"))
+available_dropoff_nodes_right_lower = ["b1l","b3l","b5l","b2l","b4l","b6l"]
+available_dropoff_nodes_right_upper = ["b1u","b3u","b5u","b2u","b4u","b6u"]
+available_dropoff_nodes_left_lower = ["a1l","a3l","a5l","a2l","a4l","a6l"]
+available_dropoff_nodes_left_upper = ["a1u","a3u","a5u","a2u","a4u","a6u"]
+right_pickup_nodes = ["la4","la3","j_la4","j_la3"]
+left_pickup_nodes = ["la1","la2","j_la1","j_la2"]
+
+
+def plan_available_dropoff(current_node, polarity, side):
+    if side == "right":
+        if polarity == "north":
+            available_nodes = available_dropoff_nodes_right_upper
+        elif polarity == "south":
+            available_nodes = available_dropoff_nodes_right_lower
+        else:
+            raise ValueError("Invalid polarity")
+
+    elif side == "left":
+        if polarity == "north":
+            available_nodes = available_dropoff_nodes_left_upper
+        elif polarity == "south":
+            available_nodes = available_dropoff_nodes_left_lower
+        else:
+            raise ValueError("Invalid polarity")
+
+    else:
+        raise ValueError("Invalid side")
+
+    if not available_nodes:
+        return None, None
+
+    target_bay = available_nodes[0]
+    route = breadth_first_search_algo(current_node, target_bay)
+    return route, target_bay
+
+def bay_unavailable(bay):
+    if bay in available_dropoff_nodes_right_lower:
+        available_dropoff_nodes_right_lower.remove(bay)
+    elif bay in available_dropoff_nodes_right_upper:
+        available_dropoff_nodes_right_upper.remove(bay)
+    elif bay in available_dropoff_nodes_left_lower:
+        available_dropoff_nodes_left_lower.remove(bay)
+    elif bay in available_dropoff_nodes_left_upper:
+        available_dropoff_nodes_left_upper.remove(bay)
+    return
+    
+#robot path appender pseudocode
+'''
+The challenge: we now want to integrate magent sensor and distance sensor to see where we need to 
+deliver to and where the boxes are full
+
+1. create a list of all possible dropoff nodes.
+2. append in a path to pickup a box
+3. execute pickup of the box
+4. read polarity using magnet sensor
+5. if magnet sensor is south head to node r1
+    if magnet sensor reading is north head to c1
+ execute the available node finder algorithm
+
+
+Available node finder algorithm:
+1. robot goes to the first branch
+2. robot heads towards the dropoff node while reading box distance
+3. if box distance reaches within a certain threshold assum we detect a box and then strike it off
+the list of available dropoff nodes
+4. make the target node equal the next available node
+5. head to that next available node and keep repeating the process until we find a truly free node
+and drop off the parcel.
+'''

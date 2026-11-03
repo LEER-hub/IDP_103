@@ -62,7 +62,6 @@ def turn_180(turn_min=4000, turn_max=4500,
              left_inverted=False, right_inverted=False):
     config.left_motor.off()
     config.right_motor.off()
-    dropoff()
     sleep(2)
 
     config.left_motor.Reverse(50)

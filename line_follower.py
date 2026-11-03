@@ -26,13 +26,9 @@ Stable position deteciton plan:
 nodes = {
     # Start box
     "c0": {"s_n": "north", "s_e": "east", "s_w": "west"},
-    "s_n": {"c1": "north", "s_ne": "east", "c0": "south", "s_nw": "west"},
-    "s_ne": {"s_e": "south", "s_n": "west"},
-    "s_e": {"s_ne": "north", "r0": "east", "s_se": "south", "c0": "west"},
-    "s_se": {"s_e": "north", "s_sw": "west"},
-    "s_sw": {"s_w": "north", "s_se": "east"},
-    "s_w": {"s_nw": "north", "c0": "east", "s_sw": "south", "l0": "west"},
-    "s_nw": {"s_n": "east", "s_w": "south"},
+    "s_n": {"c1": "north", "c0": "south"},
+    "s_e": {"r0": "east", "c0": "west"},
+    "s_w": {"c0": "east", "l0": "west"},
 
     # Left track: bottom to top
     "l0": {"j_la2": "north", "s_w": "east"},
