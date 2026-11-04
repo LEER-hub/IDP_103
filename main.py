@@ -7,20 +7,23 @@ from line_follower import nodes, line_follow_algorithms_fourline
 from on_off_switch import check_switch
 from paths import (tight_nodes, short_nodes, nodeskip, get_turn, breadth_first_search_algo, plan_available_dropoff
 ,right_pickup_nodes, left_pickup_nodes, available_dropoff_nodes_right_lower, available_dropoff_nodes_right_upper, available_dropoff_nodes_left_lower, available_dropoff_nodes_left_upper, bay_unavailable
-,right_nodes)
-
+,right_nodes,upper_nodes)
 
 # field mapping implementation
 robot_heading = 1  # compass[0] is north so robot begins east
 path = []
 node_counter = 0
 current_node = "c0"
-path = breadth_first_search_algo(current_node, "la3")
+path = breadth_first_search_algo(current_node, "la2")
 start = ticks_ms()
 carrying = False
 target_bay = None
+scanning_bay = False
+last_distance_read = ticks_ms()
+distance_readings = []
+box_counter = 0
 try:
-
+    
     config.servo1.set_angle(137.5)
     config.servo2.set_angle(0)
     _thread.start_new_thread(motion.amber_led_toggle, ())
@@ -30,6 +33,31 @@ try:
             start = ticks_ms()
             sleep(0.01)
             continue
+
+        if scanning_bay:
+            now = ticks_ms()
+            if ticks_diff(now, last_distance_read) >= 400:
+                distance_mm = config.vl53l0.read()
+                distance_readings.append(distance_mm)
+                last_distance_read = now
+
+                if distance_mm < 100:
+                    motion.stop()
+                    bay_unavailable(target_bay)
+                    current_node = target_bay
+                    scanning_bay = False
+                    path, target_bay = plan_available_dropoff(
+                        current_node, polarity, side
+                    )
+                    node_counter = 0
+
+                    if not path:
+                        break
+
+                    motion.turn_180()
+                    robot_heading = (robot_heading + 2) % 4
+                    start = ticks_ms()
+                    continue
 
 
         left_turn_signal, right_turn_signal, t_junction_signal, too_left_signal, too_right_signal, no_path_signal = line_follow_algorithms_fourline(
@@ -41,7 +69,7 @@ try:
 
         junction_detected = left_turn_signal or right_turn_signal or t_junction_signal
         endpoint_detected = no_path_signal and path[node_counter] in tight_nodes
-        if (junction_detected or endpoint_detected) and ticks_diff(ticks_ms(), start) > 300:
+        if (junction_detected or endpoint_detected) and ticks_diff(ticks_ms(), start) > 200:
             node_counter += 1
             current_node = path[node_counter]
             previous_node = path[node_counter - 1]
@@ -52,8 +80,10 @@ try:
                     motion.stop()
                     motion.pickup()
                     carrying = True
+                    box_counter += 1
+                    sleep(1)
 
-                    polarity = magnetometer.read()
+                    polarity = motion.check_hall_sensor()
                     side = "right" if current_node in ("la3", "la4") else "left"
                     path, target_bay = plan_available_dropoff(
                         current_node, polarity, side
@@ -61,22 +91,36 @@ try:
                     node_counter = 0
 
                 elif target_bay is not None and current_node == target_bay:
-                    if distance_sensor.distance_cm() < 10:
+                    scanning_bay = False
+                    distance_readings.append(config.vl53l0.read())
+                    distance_mm = min(distance_readings)
+
+                    if distance_mm < 100:
+                        motion.stop()
                         bay_unavailable(target_bay)
+                        current_node = target_bay
                         path, target_bay = plan_available_dropoff(
                             current_node, polarity, side
                         )
-                        # Keep holding the box while trying the next bay.
                         node_counter = 0
-                    else:
-                        motion.dropoff()
-                        bay_unavailable(target_bay)
-                        carrying = False
-                        target_bay = None
 
-                        pickup_node = "la4" if side == "right" else "la1"
-                        path = breadth_first_search_algo(current_node, pickup_node)
-                        node_counter = 0
+                        if not path:
+                            break
+
+                        motion.turn_180()
+                        robot_heading = (robot_heading + 2) % 4
+                        start = ticks_ms()
+                        continue
+
+                    motion.dropoff()
+                    bay_unavailable(target_bay)
+                    carrying = False
+                    target_bay = None
+
+                    pickup_node_list = ["la2", "la3", "la2", "la1"]
+                    pickup_node = pickup_node_list[box_counter % 4]
+                    path = breadth_first_search_algo(current_node, pickup_node)
+                    node_counter = 0
 
                 else:
                     break
@@ -107,6 +151,13 @@ try:
                     node_counter += 1
                 robot_heading -= 1
             start = ticks_ms()
+            if target_bay is not None and path[node_counter + 1] == target_bay:
+                distance_readings = []
+                scanning_bay = True
+                last_distance_read = ticks_ms()
+
+            if current_node in upper_nodes:
+                config.servo2.set_angle(20)
 
         else:
             motion.forward()

@@ -20,7 +20,7 @@ def get_turn(current_node, next_node, heading):
     return (target_heading - heading) % 4
 
 def nodeskip(previous_node,current_node, next_node):
-    if (previous_node in drop_nodes) and (current_node in tight_nodes) and not (next_node in ("j_la4","s_n","j_la1")):
+    if (previous_node in drop_nodes) and (current_node in tight_nodes) and not (next_node in ("j_la4","s_n","j_la1"))                                                                                                                                                                                               :
         return True
     else:
         return False
@@ -92,12 +92,13 @@ boxheld_previous = 0
 boxheld_current = 0
 path = []
 path.extend(breadth_first_search_algo("c0","la3"))
-available_dropoff_nodes_right_lower = ["b1l","b3l","b5l","b2l","b4l","b6l"]
-available_dropoff_nodes_right_upper = ["b1u","b3u","b5u","b2u","b4u","b6u"]
-available_dropoff_nodes_left_lower = ["a1l","a3l","a5l","a2l","a4l","a6l"]
-available_dropoff_nodes_left_upper = ["a1u","a3u","a5u","a2u","a4u","a6u"]
+available_dropoff_nodes_right_lower = ["b2l","b4l","b6l","b3l","b5l"]
+available_dropoff_nodes_right_upper = ["b2u","b4u","b6u","b3u","b5u"]
+available_dropoff_nodes_left_lower = ["a2l","a4l","a6l","a1l","a3l","a5l"]
+available_dropoff_nodes_left_upper = ["a2u","a4u","a6u","a1u","a3u","a5u"]
 right_pickup_nodes = ["la4","la3","j_la4","j_la3"]
 left_pickup_nodes = ["la1","la2","j_la1","j_la2"]
+upper_nodes = ["b1u","b2u","b3u","b4u","b5u","b6u","a1u","a2u","a3u","a4u","a5u","a6u","c1","c2","c3","c4","c5","c6"]
 
 
 def plan_available_dropoff(current_node, polarity, side):

@@ -2,11 +2,11 @@ from utime import sleep, ticks_ms, ticks_diff
 import config
 
 
-def turn_left_90(turn_min=1100, turn_max=4000,
+def turn_left_90(turn_min=1700, turn_max=4000,
                  left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
-    sleep(1.7)
+    sleep(1.75)
     config.right_motor.Forward(50)
     config.left_motor.Reverse(50)
     start = ticks_ms()
@@ -30,11 +30,11 @@ def turn_left_90(turn_min=1100, turn_max=4000,
                 config.right_motor.Forward(50)
 
 
-def turn_right_90(turn_min=1100, turn_max=4000,
+def turn_right_90(turn_min=1700, turn_max=4000,
                   left_inverted=False, right_inverted=False):
     config.left_motor.Forward(50)
     config.right_motor.Forward(50)
-    sleep(1.7)
+    sleep(1.75)
     config.right_motor.Reverse(50)
     config.left_motor.Forward(50)
     start = ticks_ms()
@@ -58,7 +58,7 @@ def turn_right_90(turn_min=1100, turn_max=4000,
                 config.right_motor.Reverse(50)
 
 
-def turn_180(turn_min=4000, turn_max=4500,
+def turn_180(turn_min=4500, turn_max=5500,
              left_inverted=False, right_inverted=False):
     config.left_motor.off()
     config.right_motor.off()
@@ -66,7 +66,7 @@ def turn_180(turn_min=4000, turn_max=4500,
 
     config.left_motor.Reverse(50)
     config.right_motor.Reverse(50)
-    sleep(1.5)
+    sleep(1.0)
     config.right_motor.Reverse(50)
     config.left_motor.Forward(50)
     start = ticks_ms()
@@ -91,11 +91,11 @@ def turn_180(turn_min=4000, turn_max=4500,
                 config.right_motor.Reverse(50)
 
 
-def short_turn_180(turn_min=2500, turn_max=4000,
+def short_turn_180(turn_min=2500, turn_max=5000,
                    left_inverted=False, right_inverted=False):
     config.right_motor.Forward(50)
     config.left_motor.Forward(50)
-    sleep(0.5)
+    sleep(1.0)
     config.right_motor.Reverse(50)
     config.left_motor.Forward(50)
     start = ticks_ms()
@@ -122,9 +122,9 @@ def short_turn_180(turn_min=2500, turn_max=4000,
 
 def tight_turn_right_90(turn_min=1300, turn_max=2500,
                         left_inverted=False, right_inverted=False):
-    config.left_motor.Forward(50)
-    config.right_motor.Forward(50)
-    sleep(1.6)
+    config.left_motor.Forward(100)
+    config.right_motor.Forward(100)
+    sleep(0.8)
     config.right_motor.Reverse(50)
     config.left_motor.Forward(50)
     start = ticks_ms()
@@ -151,9 +151,9 @@ def tight_turn_right_90(turn_min=1300, turn_max=2500,
 
 def tight_turn_left_90(turn_min=1300, turn_max=2500,
                        left_inverted=False, right_inverted=False):
-    config.left_motor.Forward(50)
-    config.right_motor.Forward(50)
-    sleep(1.6)
+    config.left_motor.Forward(100)
+    config.right_motor.Forward(100)
+    sleep(0.8)
     config.right_motor.Forward(50)
     config.left_motor.Reverse(50)
     start = ticks_ms()
@@ -184,25 +184,25 @@ def tight_turn_left_90(turn_min=1300, turn_max=2500,
 def pickup():
     stop()
     config.servo1.set_angle(132.5)
-    sleep(2)
+    sleep(0.5)
     config.servo2.set_angle(0)
     forward(50)
-    sleep(1)
+    sleep(0.8)
     stop()
     config.servo1.set_angle(37.5)
-    sleep(2)
-    config.servo2.set_angle(125)
-    sleep(2)
+    sleep(0.5)
+    config.servo2.set_angle(110)
+    sleep(0.5)
 
 
 def dropoff():
     stop()
-    sleep(2)
+    sleep(0.5)
     forward(50)
     sleep(0.3)
     stop()
-    sleep(2)
-    config.servo1.set_angle(130)
+    sleep(0.5)
+    config.servo1.set_angle(70)
 
 
 def left_tap(
@@ -238,30 +238,31 @@ def amber_led_toggle():
 
 
 def check_hall_sensor():    # logic from hall_sensor.py
-    value = config.hall.read_u16()
+    value = config.hall_sensor.read_u16()
     voltage = value * 3.3 / 65535
     polarity = None
 
-    if voltage < 1.80:
+    if voltage < 1.95:
         print("South Pole")
         polarity = "south"
-        south_pin.value(1)
-        north_pin.value(0)
+        config.south_pin.value(1)
+        config.north_pin.value(0)
 
-    elif voltage > 2.20:
+    elif voltage > 1.95:
         print("North Pole")
         polarity = "north"
-        north_pin.value(1)
-        south_pin.value(0)
+        config.north_pin.value(1)
+        config.south_pin.value(0)
 
     else:
         print("No magnet detected")
-        north_pin.value(0)
-        south_pin.value(0)
+        config.north_pin.value(0)
+        config.south_pin.value(0)
 
     print("ADC:", value, "| Voltage:", round(voltage, 3), "V")
-    # amber_led.toggle()
     sleep(0.4)
+    return polarity
+    # amber_led.toggle()
 
 
 # pickup()
