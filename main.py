@@ -12,6 +12,7 @@ from paths import (tight_nodes, short_nodes, nodeskip, get_turn, breadth_first_s
 # field mapping implementation
 robot_heading = 1  # compass[0] is north so robot begins east
 path = []
+# node_counter indexes the last reached node in the active route.
 node_counter = 0
 current_node = "c0"
 path = breadth_first_search_algo(current_node, "la2")
@@ -30,12 +31,14 @@ try:
     while True:
         if not check_switch():
             motion.stop()
+            # Restart the junction timing window while the robot is paused.
             start = ticks_ms()
             sleep(0.01)
             continue
 
         if scanning_bay:
             now = ticks_ms()
+            # Sample during the approach while leaving line following active between reads.
             if ticks_diff(now, last_distance_read) >= 400:
                 distance_mm = config.vl53l0.read()
                 distance_readings.append(distance_mm)
@@ -43,6 +46,7 @@ try:
 
                 if distance_mm < 100:
                     motion.stop()
+                    # Exclude an occupied bay before planning the next delivery attempt.
                     bay_unavailable(target_bay)
                     current_node = target_bay
                     scanning_bay = False
@@ -69,6 +73,7 @@ try:
 
         junction_detected = left_turn_signal or right_turn_signal or t_junction_signal
         endpoint_detected = no_path_signal and path[node_counter] in tight_nodes
+        # Ignore detections for 200 ms after a manoeuvre to avoid counting it twice.
         if (junction_detected or endpoint_detected) and ticks_diff(ticks_ms(), start) > 200:
             node_counter += 1
             current_node = path[node_counter]
@@ -83,6 +88,7 @@ try:
                     box_counter += 1
                     sleep(1)
 
+                    # Polarity selects the bay level; the pickup location selects the rack.
                     polarity = motion.check_hall_sensor()
                     side = "right" if current_node in ("la3", "la4") else "left"
                     path, target_bay = plan_available_dropoff(
@@ -93,6 +99,7 @@ try:
                 elif target_bay is not None and current_node == target_bay:
                     scanning_bay = False
                     distance_readings.append(config.vl53l0.read())
+                    # Any close reading during the approach makes the bay occupied.
                     distance_mm = min(distance_readings)
 
                     if distance_mm < 100:
@@ -117,6 +124,7 @@ try:
                     carrying = False
                     target_bay = None
 
+                    # Cycle through the pickup sequence using the number of collected boxes.
                     pickup_node_list = ["la2", "la3", "la2", "la1"]
                     pickup_node = pickup_node_list[box_counter % 4]
                     path = breadth_first_search_algo(current_node, pickup_node)
@@ -151,6 +159,7 @@ try:
                     node_counter += 1
                 robot_heading -= 1
             start = ticks_ms()
+            # Start a fresh set of distance samples on the final leg into a bay.
             if target_bay is not None and path[node_counter + 1] == target_bay:
                 distance_readings = []
                 scanning_bay = True
@@ -166,6 +175,7 @@ try:
             elif too_right_signal:
                 motion.left_tap()
 finally:
+    # Stop the motors whether the route finishes or execution raises an error.
     motion.stop()
 
 

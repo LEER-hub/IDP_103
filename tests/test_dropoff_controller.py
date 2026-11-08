@@ -6,6 +6,7 @@ from dropoff_controller import DropoffController
 
 class DropoffControllerTests(unittest.TestCase):
     def make_controller(self, pole="south", occupied=None, side="right"):
+        # Record actions through callbacks so the workflow can be checked without hardware.
         events = []
         occupied = occupied or (lambda bay: 0)
         controller = DropoffController(

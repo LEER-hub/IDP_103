@@ -7,9 +7,11 @@ from config import far_left_sensor,middle_left_sensor,middle_right_sensor,far_ri
 
 def line_follow_algorithms_fourline(far_left_sensor, middle_left_sensor, middle_right_sensor, far_right_sensor):
 
+    # Outer and adjacent middle sensors identify branches; all four identify a junction.
     left_turn_signal = far_left_sensor and middle_left_sensor and not(far_right_sensor)
     right_turn_signal = far_right_sensor and middle_right_sensor and (not far_left_sensor) 
     t_junction_signal = far_left_sensor and middle_left_sensor and far_right_sensor and middle_right_sensor
+    # A lone middle sensor indicates which steering correction is needed.
     too_left_signal = middle_right_sensor and not (middle_left_sensor or far_left_sensor or far_right_sensor)
     too_right_signal = middle_left_sensor  and not (middle_right_sensor or far_right_sensor or far_left_sensor)
     no_path_signal = not (middle_left_sensor or middle_right_sensor or far_left_sensor or far_right_sensor)
@@ -23,6 +25,7 @@ Stable position deteciton plan:
 
 '''
 
+# Each node maps its neighbours to the compass direction needed to reach them.
 nodes = {
     # Start box
     "c0": {"s_n": "north", "s_e": "east", "s_w": "west"},
