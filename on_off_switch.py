@@ -12,6 +12,7 @@ last_state = 1  # initially unpressed
 def check_switch():
     global running,last_state
     state = on_off_switch.value()
+    # Toggle only on a new press so holding the button does not repeatedly change state.
     if state == 0 and last_state == 1:
         running = not running
         motion.stop()

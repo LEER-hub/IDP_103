@@ -49,6 +49,7 @@ def check_empty():
         distance = vl53l0.read()
         detected_distances.append(distance)
         sleep(0.1)
+    # Any close sample marks the rack as occupied, even if the other readings are clear.
     if min(detected_distances) < 250:
         print("Rack is full, store somewhere else.")
     else:

@@ -17,9 +17,11 @@ COMPASS = ("north", "east", "south", "west")
 def get_turn(current_node, next_node, heading):
     target_direction = nodes[current_node][next_node]
     target_heading = COMPASS.index(target_direction)
+    # Compass order gives 0 = straight, 1 = right, 2 = U-turn, 3 = left.
     return (target_heading - heading) % 4
 
 def nodeskip(previous_node,current_node, next_node):
+    # Allow an extra route-index advance after turning out of a bay, except at these exits.
     if (previous_node in drop_nodes) and (current_node in tight_nodes) and not (next_node in ("j_la4","s_n","j_la1"))                                                                                                                                                                                               :
         return True
     else:
@@ -66,6 +68,7 @@ def get_left_dropoff(polarity):
     return None
 
 def breadth_first_search_algo (start_node, target_node):
+    # FIFO exploration finds a route with the fewest graph edges.
     queue = [start_node]
     visited = {start_node}
     previous = {start_node: None}
@@ -73,6 +76,7 @@ def breadth_first_search_algo (start_node, target_node):
     while len(queue) > 0:
         node = queue.pop(0)
         if node == target_node:
+                    # Follow parent links back to the start, then put the route in travel order.
                     path = []
                     while node is not None:
                         path.append(node)
@@ -82,6 +86,7 @@ def breadth_first_search_algo (start_node, target_node):
         
         for neighbour in nodes[node]:
             if neighbour not in visited:
+                # Mark on enqueue so each node is explored only once.
                 visited.add(neighbour)
                 queue.append(neighbour)
                 previous[neighbour] = node
@@ -102,6 +107,7 @@ upper_nodes = ["b1u","b2u","b3u","b4u","b5u","b6u","a1u","a2u","a3u","a4u","a5u"
 
 
 def plan_available_dropoff(current_node, polarity, side):
+    # Pickup side selects the rack; magnetic polarity selects its upper or lower bays.
     if side == "right":
         if polarity == "north":
             available_nodes = available_dropoff_nodes_right_upper
@@ -124,11 +130,13 @@ def plan_available_dropoff(current_node, polarity, side):
     if not available_nodes:
         return None, None
 
+    # List order sets the bay priority; BFS then finds the route to that bay.
     target_bay = available_nodes[0]
     route = breadth_first_search_algo(current_node, target_bay)
     return route, target_bay
 
 def bay_unavailable(bay):
+    # Occupied or completed bays are removed from future dropoff choices.
     if bay in available_dropoff_nodes_right_lower:
         available_dropoff_nodes_right_lower.remove(bay)
     elif bay in available_dropoff_nodes_right_upper:

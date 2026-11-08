@@ -24,6 +24,7 @@ class Servo:
         if angle > Servo.MAX_ANGLE:
             angle = Servo.MAX_ANGLE
 
+        # Scale the clamped angle across the configured travel into a PWM duty value.
         duty = int(Servo.MIN_DUTY + (angle / Servo.SERVO_RANGE) *
                    (Servo.MAX_DUTY - Servo.MIN_DUTY))
         self.servo.duty_u16(duty)
