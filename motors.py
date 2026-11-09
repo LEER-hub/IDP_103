@@ -13,6 +13,7 @@ class Motor:
         
     def Forward(self, speed=100):
         self.mDir.value(0)                     # forward = 0 reverse = 1 motor
+        # Map the requested speed percentage onto the full 16-bit PWM duty range.
         self.pwm.duty_u16(int(65535 * speed / 100))  # speed range 0-100 motor
 
     def Reverse(self, speed=100):

@@ -12,6 +12,7 @@ while True:
     voltage = value * 3.3 / 65535
     polarity = None
 
+    # Leave the voltage band between the two thresholds unclassified as either pole.
     if voltage < 1.80:
         print("South Pole")
         polarity = "south"
